@@ -1,7 +1,11 @@
-var ourRes,abbreviations;
-
 function handleInputText(corpus){
-  abbreviations=nlp(corpus).places().text().split("\n");
+  let newAbbreviations=nlp(corpus).places().text().split(" ");
+  let abbreviations=new Array
+  for(let i=1;i<newAbbreviations.length;i++){
+    abbreviations.push(newAbbreviations[i-1])
+    let newElement=newAbbreviations[i-1]+" "+newAbbreviations[i]
+    abbreviations.push(newElement)
+  }
   abbreviations.forEach(element => {
     let modifiedElement=element.replace(" ","_");
     corpus=corpus.replace(element,modifiedElement);
@@ -14,6 +18,7 @@ function handleInputText(corpus){
       ourRes+=" "+obj.text;
     })
   })
+  console.log(ourRes)
 
   return ourRes;
 }
@@ -31,7 +36,7 @@ doLemmatization.addEventListener("click", (e) => {
   e.preventDefault();
   let ourText=handleInputText(corpus.value)
   const lemmatized= nlp(ourText);
-  console.log(lemmatized.nouns().toSingular())
+  lemmatized.nouns().toSingular()
   lemmatized.verbs().toInfinitive()
   let lemmas=lemmatized.sentences().terms().out('array');
   let finalTokens=handleOutputTokens(lemmas);
